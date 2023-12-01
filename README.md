@@ -21,3 +21,4 @@ while IFS= read -r line; do
   fi
 done < "$commit_msg_file"
 ```
+
