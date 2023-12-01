@@ -1,23 +1,11 @@
 # epic-jira
 
-```shell
-vi .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-```
+## Contributing
 
-```shell
-#!/bin/bash
-
-commit_msg_file=$1
-
-# Specify your desired commit message format using a regular expression
-commit_msg_format="^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,50}$"
-
-while IFS= read -r line; do
-  if [[ ! "$line" =~ $commit_msg_format ]]; then
-    echo "Error: Invalid commit message format." >&2
-    echo "Please follow the format: <type>(optional scope): <message>" >&2
-    exit 1
-  fi
-done < "$commit_msg_file"
-```
+* `feat`: Stands for "feature". Used when introducing a new feature or enhancement.
+* `fix`: Indicates a bug fix. Used when addressing and resolving issues or defects.
+* `docs`: Short for "documentation." Commits related to documentation changes, such as updating README files or adding comments.
+* `style`: Pertains to code style changes, formatting improvements, or other non-functional changes to the code.
+* `refactor`: Denotes refactoring efforts. This includes restructuring or optimizing existing code without changing its external behavior.
+* `test`: Relates to changes in test code or the addition of new tests. Used when modifying or adding test cases.
+* `chore`: General-purpose prefix for tasks and changes that are not tied to the main application logic. Often used for maintenance tasks, build process updates, or other routine activities.
