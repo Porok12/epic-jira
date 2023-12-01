@@ -55,8 +55,7 @@
         {
           "npmPublish": false
         }
-      ],
-      "@semantic-release/github"
+      ]
     ]
   },
   "bugs": {
