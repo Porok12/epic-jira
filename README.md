@@ -9,3 +9,4 @@
 * `refactor`: Denotes refactoring efforts. This includes restructuring or optimizing existing code without changing its external behavior.
 * `test`: Relates to changes in test code or the addition of new tests. Used when modifying or adding test cases.
 * `chore`: General-purpose prefix for tasks and changes that are not tied to the main application logic. Often used for maintenance tasks, build process updates, or other routine activities.
+
