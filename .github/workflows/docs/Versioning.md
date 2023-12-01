@@ -6,4 +6,3 @@ Branches:
 * master - `v*.*.*-alpha`
 
 Stable requires PullRequest
-
