@@ -2,6 +2,11 @@
 
 ## Contributing
 
+```shell
+git config core.hooksPath .githooks
+chmod +x .githooks/pre-commit
+```
+
 * `feat`: Stands for "feature". Used when introducing a new feature or enhancement.
 * `fix`: Indicates a bug fix. Used when addressing and resolving issues or defects.
 * `docs`: Short for "documentation." Commits related to documentation changes, such as updating README files or adding comments.
