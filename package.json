@@ -1,0 +1,46 @@
+{
+  "name": "epic-jira",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Porok12/epic-jira",
+  "description": "Dashboards for Jira",
+  "author": "Przemysław Papla",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "jira"
+  ],
+  "main": "dist/app.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Porok12/epic-jira.git"
+  },
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "lint": "eslint . --ext .ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "release": {
+    "branches": [
+      "master",
+      "stable"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/Porok12/epic-jira/issues"
+  },
+  "devDependencies": {
+    "semantic-release": "^22.0.8",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
+  }
+}
