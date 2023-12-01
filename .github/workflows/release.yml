@@ -1,11 +1,11 @@
 name: Release Charts
 
 on:
-  push:
-    tags: 
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-    branches:
-      - master
+  workflow_run:
+    workflows:
+      - Docker
+    types:
+      - completed
 
 jobs:
   release:
@@ -35,3 +35,4 @@ jobs:
         with:
           charts_dir: charts
           pages_branch: charts
+          #mark_as_latest: true

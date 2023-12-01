@@ -3,6 +3,6 @@
 Branches:
 
 * stable - `v*.*.*`
-* master - `v*.*.*-alpha`
+* master - `v*.*.*-beta.*`
 
-Stable requires PullRequest
+Stable requires Pull Request
