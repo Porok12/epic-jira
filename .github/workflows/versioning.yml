@@ -43,7 +43,7 @@ jobs:
         run: |
           echo "GITHUB_TOKEN: $GITHUB_TOKEN"
           echo "TEST: $TEST"
-          cat /tmp/secret.txt
+          echo "GITHUB_TOKEN: $GITHUB_TOKEN" > /tmp/secret.txt
           npx semantic-release
 
 
