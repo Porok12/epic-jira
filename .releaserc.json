@@ -38,7 +38,7 @@
     [
       "@semantic-release/exec",
       {
-        "verifyReleaseCmd": "case $OSTYPE in darwin*) SEDOPTION=\" \";; esac && sed -i$SEDOPTION'' -e 's/version:.*/version: ${nextRelease.version}/g' deploy/Chart.yaml && sed -i$SEDOPTION'' -e 's/appVersion:.*/appVersion: \"${nextRelease.version}\"/g' deploy/Chart.yaml"
+        "verifyReleaseCmd": "case $OSTYPE in darwin*) SEDOPTION=\" \";; esac && sed -i$SEDOPTION'' -e 's/version:.*/version: ${nextRelease.version}/g' charts/epic-jira/Chart.yaml && sed -i$SEDOPTION'' -e 's/appVersion:.*/appVersion: \"${nextRelease.version}\"/g' charts/epic-jira/Chart.yaml"
       }
     ],
     [
