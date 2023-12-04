@@ -1,6 +1,9 @@
 name: Release Charts
 
 on:
+#  push:
+#    paths:
+#      - 'charts/**'
   workflow_run:
     workflows:
       - Docker
@@ -11,9 +14,9 @@ jobs:
   release:
     permissions:
       contents: write
-      
+
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
