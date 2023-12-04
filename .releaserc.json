@@ -1,25 +1,54 @@
 {
-  "branches": ["master", "stable"],
+  "branches": [
+    "master",
+    "stable"
+  ],
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
       {
         "preset": "angular",
         "releaseRules": [
-          { "type": "docs", "scope": "README", "release": "patch" },
-          { "type": "refactor", "release": "patch" },
-          { "type": "style", "release": "patch" },
-          { "type": "chore", "release": "patch" }
+          {
+            "type": "docs",
+            "scope": "README",
+            "release": "patch"
+          },
+          {
+            "type": "refactor",
+            "release": "patch"
+          },
+          {
+            "type": "style",
+            "release": "patch"
+          },
+          {
+            "type": "chore",
+            "release": "patch"
+          }
         ]
       }
     ],
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    ["@semantic-release/npm", {}],
+    [
+      "@semantic-release/npm",
+      {}
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "verifyReleaseCmd": "case $OSTYPE in darwin*) SEDOPTION=\" \";; esac && sed -i$SEDOPTION'' -e 's/version:.*/version: ${nextRelease.version}/g' deploy/Chart.yaml && sed -i$SEDOPTION'' -e 's/appVersion:.*/appVersion: \"${nextRelease.version}\"/g' deploy/Chart.yaml"
+      }
+    ],
     [
       "@semantic-release/git",
       {
-        "assets": ["CHANGELOG.md", "package.json"],
+        "assets": [
+          "CHANGELOG.md",
+          "package.json",
+          "charts/epic-jira/Chart.yaml"
+        ],
         "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ]
