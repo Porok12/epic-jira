@@ -5,8 +5,8 @@ on:
     branches:
       - master
 
-permissions:
-  contents: read # for checkout
+#permissions:
+#  contents: read # for checkout
 
 jobs:
   release:
@@ -16,11 +16,9 @@ jobs:
 
     environment: default
 
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
+#    permissions:
+#      issues: write # to be able to comment on released issues
+#      pull-requests: write # to be able to comment on released pull requests
 
     steps:
       - name: Checkout
