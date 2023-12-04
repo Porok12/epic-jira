@@ -38,7 +38,8 @@ jobs:
         run: npm audit signatures
       - name: Release
         run: |
-          echo $GITHUB_TOKEN
+          echo "GITHUB_TOKEN: $GITHUB_TOKEN"
+          echo "TEST: $TEST"
           npx semantic-release
 
 
