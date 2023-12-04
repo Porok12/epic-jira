@@ -14,16 +14,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    environment: github-pages
+    environment: default
 
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.CI_BOT }}
 
     steps:
       - name: Checkout
@@ -39,6 +36,9 @@ jobs:
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
       - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_BOT }}
+          TEST: ${{ secrets.TEST }}
         run: |
           echo "GITHUB_TOKEN: $GITHUB_TOKEN"
           echo "TEST: $TEST"
