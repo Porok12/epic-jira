@@ -1,3 +1,5 @@
+## [0.1.20](https://github.com/Porok12/epic-jira/compare/v0.1.19...v0.1.20) (2023-12-04)
+
 ## [0.1.19](https://github.com/Porok12/epic-jira/compare/v0.1.18...v0.1.19) (2023-12-04)
 
 ## [0.1.18](https://github.com/Porok12/epic-jira/compare/v0.1.17...v0.1.18) (2023-12-04)
