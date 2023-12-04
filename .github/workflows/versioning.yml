@@ -17,9 +17,9 @@ jobs:
 
     environment: default
 
-#    permissions:
-#      issues: write # to be able to comment on released issues
-#      pull-requests: write # to be able to comment on released pull requests
+    #    permissions:
+    #      issues: write # to be able to comment on released issues
+    #      pull-requests: write # to be able to comment on released pull requests
 
     steps:
       - name: Checkout
@@ -39,45 +39,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.CI_BOT }}
-          TEST: ${{ vars.TEST }}
-        run: |
-          echo "GITHUB_TOKEN: $GITHUB_TOKEN"
-          echo "TEST: $TEST"
-          echo "GITHUB_TOKEN: $GITHUB_TOKEN" > /tmp/secret.txt
-          npx semantic-release
-
-
-# name: 'Bump Version'
-
-# on:
-#   push:
-#     branches:
-#       - 'master'
-#       - 'stable'
-
-# jobs:
-#   bump-version:
-#     name: 'Bump Version'
-
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: 'Checkout source code'
-#         uses: 'actions/checkout@v2'
-#         with:
-#           ref: ${{ github.ref }}
-#       - name: 'cat package.json'
-#         run: cat ./package.json
-#       - name: 'Automated Version Bump'
-#         id: version-bump
-#         uses: 'phips28/gh-action-bump-version@master'
-#         with:
-#           tag-prefix: 'v'
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       - name: 'cat package.json'
-#         run: cat ./package.json
-#       - name: 'Output Step'
-#         env:
-#           NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
-#         run: echo "new tag $NEW_TAG"
+        run: npx semantic-release
