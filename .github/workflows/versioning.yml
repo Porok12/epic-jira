@@ -36,7 +36,9 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: npx semantic-release
+        run: |
+          echo $GITHUB_TOKEN
+          npx semantic-release
 
 
 # name: 'Bump Version'
