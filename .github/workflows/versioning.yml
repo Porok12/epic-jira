@@ -38,10 +38,12 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.CI_BOT }}
-          TEST: ${{ secrets.TEST }}
+          TEST: ${{ vars.TEST }}
         run: |
           echo "GITHUB_TOKEN: $GITHUB_TOKEN"
           echo "TEST: $TEST"
+          echo "GITHUB_TOKEN: $GITHUB_TOKEN" > /tmp/secret.txt
+          cat /tmp/secret.txt
           npx semantic-release
 
 
