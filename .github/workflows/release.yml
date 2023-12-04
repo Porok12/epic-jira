@@ -6,7 +6,7 @@ on:
 #      - 'charts/**'
   workflow_run:
     workflows:
-      - Docker
+      - Docker Publish
     types:
       - completed
 
