@@ -1,7 +1,9 @@
-FROM ubuntu:22.04
+FROM nginx:1.25-alpine-slim
 
-#COPY 
+WORKDIR /usr/share/nginx/html
 
-#RUN 
+COPY src/ .
 
-CMD echo "test"
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
