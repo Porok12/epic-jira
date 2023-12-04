@@ -2,6 +2,10 @@
 
 ## Contributing
 
+https://commitlint.js.org/#/
+
+https://commitizen-tools.github.io/commitizen/
+
 ```shell
 git config core.hooksPath .githooks
 chmod +x .githooks/pre-commit
