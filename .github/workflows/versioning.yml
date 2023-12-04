@@ -2,8 +2,9 @@ name: Versioning
 
 on:
   push:
-    branches:
-      - master
+    branches: [ 'master' ]
+    tags-ignore: [ '*' ]
+    paths-ignore: [ '*' ]
 
 #permissions:
 #  contents: read # for checkout
@@ -42,7 +43,6 @@ jobs:
         run: |
           echo "GITHUB_TOKEN: $GITHUB_TOKEN"
           echo "TEST: $TEST"
-          echo "GITHUB_TOKEN: $GITHUB_TOKEN" > /tmp/secret.txt
           cat /tmp/secret.txt
           npx semantic-release
 
