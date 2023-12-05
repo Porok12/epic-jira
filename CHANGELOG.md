@@ -1,3 +1,10 @@
+## [0.1.26](https://github.com/Porok12/epic-jira/compare/v0.1.25...v0.1.26) (2023-12-05)
+
+
+### Bug Fixes
+
+* **ci:** fix dockerfile ([0719aeb](https://github.com/Porok12/epic-jira/commit/0719aebe1ac61b1b61ac61622c333be8e7dbff99))
+
 ## [0.1.25](https://github.com/Porok12/epic-jira/compare/v0.1.24...v0.1.25) (2023-12-05)
 
 ## [0.1.24](https://github.com/Porok12/epic-jira/compare/v0.1.23...v0.1.24) (2023-12-04)
