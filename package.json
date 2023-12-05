@@ -14,7 +14,6 @@
   "bugs": {
     "url": "https://github.com/Porok12/epic-jira/issues"
   },
-  "sideEffects": false,
   "scripts": {
     "commit": "git-cz",
     "dev": "remix dev --manual",
@@ -58,5 +57,6 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "sideEffects": false
 }
