@@ -1,21 +1,38 @@
-# epic-jira
+# EpicJira
 
-## Contributing
+- [Remix Docs](https://remix.run/docs)
 
-https://commitlint.js.org/#/
+## Development
 
-https://commitizen-tools.github.io/commitizen/
+From your terminal:
 
-```shell
-git config core.hooksPath .githooks
-chmod +x .githooks/pre-commit
+```sh
+npm run dev
 ```
 
-* `feat`: Stands for "feature". Used when introducing a new feature or enhancement.
-* `fix`: Indicates a bug fix. Used when addressing and resolving issues or defects.
-* `docs`: Short for "documentation." Commits related to documentation changes, such as updating README files or adding comments.
-* `style`: Pertains to code style changes, formatting improvements, or other non-functional changes to the code.
-* `refactor`: Denotes refactoring efforts. This includes restructuring or optimizing existing code without changing its external behavior.
-* `test`: Relates to changes in test code or the addition of new tests. Used when modifying or adding test cases.
-* `chore`: General-purpose prefix for tasks and changes that are not tied to the main application logic. Often used for maintenance tasks, build process updates, or other routine activities.
+This starts your app in development mode, rebuilding assets on file changes.
 
+## Deployment
+
+First, build your app for production:
+
+```sh
+npm run build
+```
+
+Then run the app in production mode:
+
+```sh
+npm start
+```
+
+Now you'll need to pick a host to deploy it to.
+
+### DIY
+
+If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
+
+Make sure to deploy the output of `remix build`
+
+- `build/`
+- `public/build/`

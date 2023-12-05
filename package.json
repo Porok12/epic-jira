@@ -8,32 +8,55 @@
   "keywords": [
     "jira"
   ],
-  "main": "dist/app.ts",
+  "main": "app/root.tsx",
   "private": true,
   "repository": "github:Porok12/epic-jira",
   "bugs": {
     "url": "https://github.com/Porok12/epic-jira/issues"
   },
+  "sideEffects": false,
   "scripts": {
     "commit": "git-cz",
-    "start": "tsc && node dist/app.js",
-    "lint": "eslint . --ext .ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "remix dev --manual",
+    "build": "remix build",
+    "start": "remix-serve ./build/index.js",
+    "typecheck": "tsc"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.19",
+    "@remix-run/css-bundle": "^2.3.1",
+    "@remix-run/node": "^2.3.1",
+    "@remix-run/react": "^2.3.1",
+    "@remix-run/serve": "^2.3.1",
+    "@remix-run/server-runtime": "^2.3.1",
+    "isbot": "^3.6.8",
+    "jira-client": "^8.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
+    "@remix-run/dev": "^2.3.1",
+    "@remix-run/eslint-config": "^2.3.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@types/jira-client": "^7.1.9",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.54.0",
+    "eslint": "^8.38.0",
     "semantic-release": "^22.0.8",
-    "typescript": "^5.3.2"
+    "typescript": "^5.1.6"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
