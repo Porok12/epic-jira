@@ -1,3 +1,11 @@
+# [0.2.0](https://github.com/Porok12/epic-jira/compare/v0.1.26...v0.2.0) (2023-12-23)
+
+
+### Features
+
+* **release:** chartjs test ([c10d786](https://github.com/Porok12/epic-jira/commit/c10d78696fd20cdd0e010a8385987d3d0feda46d))
+* **release:** load envs & scrap jira & prettier ([4948cbb](https://github.com/Porok12/epic-jira/commit/4948cbb4de34715467f5c412fca9d2a347b947c9))
+
 ## [0.1.26](https://github.com/Porok12/epic-jira/compare/v0.1.25...v0.1.26) (2023-12-05)
 
 
