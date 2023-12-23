@@ -38,7 +38,7 @@ ingress:
     - host: chart-example.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -56,17 +56,28 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+
+# Additional ...
+env: []
+# - name: HOST
+#   value: "https://jira.com"
+
+# Additional ...
+envFrom: []
+# - secretRef:
+#     name: epic-secret
+
 # Additional volumes on the output Deployment definition.
 volumes: []
-# - name: foo
+# - name: epic-secret
 #   secret:
-#     secretName: mysecret
+#     secretName: epic-secret
 #     optional: false
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
+# - name: epic-secret
+#   mountPath: "/app/secret"
 #   readOnly: true
 
 nodeSelector: {}
@@ -74,3 +85,12 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+# podAntiAffinity:
+#   requiredDuringSchedulingIgnoredDuringExecution:
+#     - labelSelector:
+#         matchExpressions:
+#           - key: app.kubernetes.io/name
+#             operator: In
+#             values:
+#               - epic-jira
+#       topologyKey: "kubernetes.io/hostname"

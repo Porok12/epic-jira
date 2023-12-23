@@ -1,71 +1,69 @@
-import {useState} from "react";
-import {IconButton, Typography} from "@mui/material";
-import {Refresh as RefreshIcon} from '@mui/icons-material';
-import type {LoaderFunctionArgs, MetaFunction} from "@remix-run/node";
-// import {useLoaderData} from "@remix-run/react";
-// import JiraApi from 'jira-client';
-//
-// const jira = new JiraApi({
-//     protocol: 'https',
-//     host: 'jira.somehost.com',
-//     username: 'username',
-//     password: 'password',
-//     apiVersion: '2',
-//     strictSSL: true
-// });
+import React from 'react'
+import { Box, Card, CardContent, Divider, Typography } from '@mui/material'
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
 
-// export const loader = async ({}: LoaderFunctionArgs) => {
-//     const jira = new JiraApi({
-//         protocol: 'https',
-//         host: 'jira.somehost.com',
-//         username: 'username',
-//         password: 'password',
-//         apiVersion: '2',
-//         strictSSL: true
-//     });
-//
-//     const epicId = '';
-//
-//     return await jira.getIssuesForEpic(epicId);
-// };
+import { userPrefs } from '~/cookies.server'
+import Button from '@mui/material/Button'
 
 export const meta: MetaFunction = () => {
-    return [
-        {title: "EpicJira"},
-        {name: "description", content: "Welcome to EpicJira!"},
-    ];
-};
+  return [
+    { title: 'EpicJira' },
+    { name: 'description', content: 'Welcome to EpicJira!' },
+  ]
+}
+
+export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = (await userPrefs.parse(cookieHeader)) || {}
+  return json({ cookie })
+}
+
+export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = (await userPrefs.parse(cookieHeader)) || {}
+  const bodyParams = await request.formData()
+  if (bodyParams.get('bannerVisibility') === 'hidden') {
+    cookie.showBanner = false
+  }
+  return redirect('/', {
+    headers: {
+      'Set-Cookie': await userPrefs.serialize(cookie),
+    },
+  })
+}
 
 export default function Index() {
-    // const issues = useLoaderData<typeof loader>();
-    const [issues, setIssues] = useState<any>(null);
+  const { cookie } = useLoaderData<typeof loader>()
+  const {} = useActionData<typeof action>() ?? {}
 
-    const getIssues = async () => {
-        try {
-            const epicId = '';
-            const data = [{}];//await jira.getIssuesForEpic(epicId);
+  return (
+    <Box flexGrow={1}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Dashboard
+      </Typography>
 
-            console.log('API Call Result:', data);
-            setIssues(data);
-        } catch (error) {
-            // Handle the error
-            console.error('API call error:', error);
-        }
-    };
+      <Divider />
 
-    return (
-        <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Welcome to EpicJira
-            </Typography>
-
-            <IconButton onClick={getIssues}>
-                <RefreshIcon/>
-            </IconButton>
+      <Box mt={2} mx={2}>
+        <Card>
+          <CardContent>
+            <Box component={Form} method="post">
+              <input
+                type="hidden"
+                name="bannerVisibility"
+                value="hidden"
+              />
+              <Button type="submit">Send</Button>
+            </Box>
 
             <Typography variant="body1">
-                {JSON.stringify(issues, null, 2)}
+              {JSON.stringify(cookie, null, 2)}
             </Typography>
-        </div>
-    );
+          </CardContent>
+        </Card>
+      </Box>
+    </Box>
+  )
 }
