@@ -1,3 +1,11 @@
+## [0.3.6](https://github.com/Porok12/epic-jira/compare/v0.3.5...v0.3.6) (2023-12-26)
+
+
+### Bug Fixes
+
+* **ci:** refactor ([afb2858](https://github.com/Porok12/epic-jira/commit/afb28588e3987a43f67a4eebcb4cf0d55f8b3127))
+* **docker:** copy patches ([3c673e5](https://github.com/Porok12/epic-jira/commit/3c673e5ab9e532659038c262cc7e5357a3da3baf))
+
 ## [0.3.5](https://github.com/Porok12/epic-jira/compare/v0.3.4...v0.3.5) (2023-12-26)
 
 
