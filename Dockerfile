@@ -21,7 +21,7 @@ WORKDIR /app
 # Copy only the necessary files from the builder image
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/public/build ./public/build
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/build ./build
 
 # Expose the port that the application will run on

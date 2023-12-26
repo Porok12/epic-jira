@@ -12,7 +12,7 @@ export async function loader() {
     return json({ config: configBuffer.toString() })
   } catch (e) {
     console.error(e)
-    return json({ config: '{ dashboards: [] }' })
+    return json({ config: '{ "dashboards": [] }' })
   }
 }
 
