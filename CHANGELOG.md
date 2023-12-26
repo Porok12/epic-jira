@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/Porok12/epic-jira/compare/v0.3.1...v0.3.2) (2023-12-26)
+
+
+### Bug Fixes
+
+* **app:** health endpoint ([341d215](https://github.com/Porok12/epic-jira/commit/341d2150f79331189c03163fdc0a1cd21f460a6c))
+
 ## [0.3.1](https://github.com/Porok12/epic-jira/compare/v0.3.0...v0.3.1) (2023-12-26)
 
 
