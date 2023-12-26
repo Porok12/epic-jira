@@ -11,7 +11,8 @@ export async function loader() {
     const configBuffer = await configFile.readFile()
     return json({ config: configBuffer.toString() })
   } catch (e) {
-    return json({ config: null })
+    console.error(e)
+    return json({ config: { dashboards: [] } })
   }
 }
 

@@ -76,6 +76,7 @@ export const readConfig = async (): Promise<Config> => {
     const configBuffer = await configFile!.readFile()
     return JSON.parse(configBuffer.toString())
   } catch (e) {
-    return {} as any
+    console.error(e)
+    return { dashboards: [] }
   }
 }
