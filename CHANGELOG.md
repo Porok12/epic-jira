@@ -1,3 +1,11 @@
+## [0.3.5](https://github.com/Porok12/epic-jira/compare/v0.3.4...v0.3.5) (2023-12-26)
+
+
+### Bug Fixes
+
+* **app:** fix patch-package ([878747a](https://github.com/Porok12/epic-jira/commit/878747a16bdff173ea07fc0b1b6465b9fdcd8649))
+* **app:** testing ([644343c](https://github.com/Porok12/epic-jira/commit/644343c0cd4fd83a1b1a99e6cbe1331124890253))
+
 ## [0.3.4](https://github.com/Porok12/epic-jira/compare/v0.3.3...v0.3.4) (2023-12-26)
 
 
