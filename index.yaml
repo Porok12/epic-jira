@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   epic-jira:
   - apiVersion: v2
+    appVersion: 0.3.0
+    created: "2023-12-26T10:22:12.869539933Z"
+    description: A Helm chart for EpicJira
+    digest: caa8ae4bcdd93a135d8cfdb4b93b0a0218e7e604f25f20873a1daf19650d031d
+    name: epic-jira
+    type: application
+    urls:
+    - https://github.com/Porok12/epic-jira/releases/download/epic-jira-0.3.0/epic-jira-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 0.2.0
     created: "2023-12-23T22:22:27.694285503Z"
     description: A Helm chart for EpicJira
@@ -51,4 +61,4 @@ entries:
     urls:
     - https://github.com/Porok12/epic-jira/releases/download/epic-jira-0.1.0/epic-jira-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-23T22:22:27.694309818Z"
+generated: "2023-12-26T10:22:12.869575309Z"
