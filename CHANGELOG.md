@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/Porok12/epic-jira/compare/v0.2.0...v0.3.0) (2023-12-26)
+
+
+### Features
+
+* **docs:** implement basic config ([d28b333](https://github.com/Porok12/epic-jira/commit/d28b33346ca3111469524c57caa717e606263929))
+
 # [0.2.0](https://github.com/Porok12/epic-jira/compare/v0.1.26...v0.2.0) (2023-12-23)
 
 
