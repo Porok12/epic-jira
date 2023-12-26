@@ -1,3 +1,10 @@
+## [0.3.4](https://github.com/Porok12/epic-jira/compare/v0.3.3...v0.3.4) (2023-12-26)
+
+
+### Bug Fixes
+
+* **app:** default config fix ([a477a9a](https://github.com/Porok12/epic-jira/commit/a477a9ad44cdf0f8227aeb8ff3e3de56f157986d))
+
 ## [0.3.3](https://github.com/Porok12/epic-jira/compare/v0.3.2...v0.3.3) (2023-12-26)
 
 
