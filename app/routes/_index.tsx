@@ -220,7 +220,7 @@ export default function Index() {
             component = JSON.stringify(diagram)
           }
           return (
-            <Card sx={{ mt: 2 }}>
+            <Card key={diagram.title} sx={{ mt: 2 }}>
               <CardHeader title={diagram.title} />
               <CardContent>
                 {component}

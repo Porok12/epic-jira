@@ -1,0 +1,23 @@
+diff --git a/node_modules/jira-client/lib/jira.js b/node_modules/jira-client/lib/jira.js
+index b94c316..7381301 100644
+--- a/node_modules/jira-client/lib/jira.js
++++ b/node_modules/jira-client/lib/jira.js
+@@ -740,14 +740,12 @@ class JiraApi {
+ 
+   searchJira(searchString, optional = {}) {
+     return this.doRequest(this.makeRequestHeader(this.makeUri({
+-      pathname: '/search'
+-    }), {
+-      method: 'POST',
+-      followAllRedirects: true,
+-      body: {
++      pathname: '/search',
++      query: {
+         jql: searchString,
+-        ...optional
+       }
++    }), {
++      followAllRedirects: true,
+     }));
+   }
+   /** Create a Jira user
