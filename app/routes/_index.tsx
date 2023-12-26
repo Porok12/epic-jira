@@ -46,8 +46,8 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 
   const config = await readConfig()
 
-  const accumulateCustom = (array: any[]) => array.map((sum => value => ({ ...value, value: sum += value.value}))(0))
-  console.log(accumulateCustom([{ value: 1 }, {value: 2}, {value: 3}]))
+  const accumulateCustom = (array: any[]) => array.map((sum => value => ({ ...value, value: sum += value.value }))(0))
+  console.log(accumulateCustom([{ value: 1 }, { value: 2 }, { value: 3 }]))
 
   const diagrams = []
   for (const dashboard of config.dashboards) {
