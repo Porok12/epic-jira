@@ -1,0 +1,46 @@
+{
+  "title": "config",
+  "description": "Auto generated JSON schema based on the 'config' file",
+  "type": "object",
+  "properties": {
+    "dashboards": {
+      "type": "array",
+      "items": {
+        "properties": {
+          "components": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "query": {
+                  "type": "string"
+                },
+                "datasets": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "filter": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "title": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
