@@ -12,7 +12,7 @@ export async function loader() {
     return json({ config: configBuffer.toString() })
   } catch (e) {
     console.error(e)
-    return json({ config: { dashboards: [] } })
+    return json({ config: '{ dashboards: [] }' })
   }
 }
 
@@ -30,7 +30,7 @@ export default function Config() {
         <Card>
           <CardContent>
             <Typography variant="body1" whiteSpace="pre-wrap">
-              {JSON.stringify(JSON.parse(config || '{}'), null, 2)}
+              {JSON.stringify(JSON.parse(config), null, 2)}
             </Typography>
           </CardContent>
         </Card>
