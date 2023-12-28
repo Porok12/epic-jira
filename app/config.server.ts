@@ -44,6 +44,8 @@ export interface TimeComponent {
   query: string
   type: 'time'
   accumulative: true
+  xAxis: object
+  yAxis: object
   datasets: {
     name: string
     filter: string

@@ -110,7 +110,13 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
           }
           datasets.push({ value, name })
         }
-        diagrams.push({ datasets, type: component.type, title: component.title })
+        diagrams.push({
+          datasets,
+          xAxis: component.xAxis,
+          yAxis: component.yAxis,
+          type: component.type,
+          title: component.title,
+        })
       }
     }
   }
@@ -269,8 +275,6 @@ export default function Index() {
                     datasets: diagram.datasets.map(ds => ({ data: ds.value })),
                   }}
                   options={{
-                    // backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    // borderColor: 'rgba(255, 255, 255, 0.1)',
                     parsing: {
                       xAxisKey: 'created',
                       yAxisKey: 'value',
@@ -278,18 +282,13 @@ export default function Index() {
                     scales: {
                       x: {
                         type: 'time',
-                        min: '2023-09-01T00:00:00.000+0000',
-                        max: '2023-12-31T00:00:00.000+0000',
                         time: {
                           unit: 'week'
                         },
-                        ticks: {
-                          // stepSize: 7,
-                        }
+                        ...diagram.xAxis,
                       },
                       y: {
-                        min: -1,
-                        max: 6,
+                        ...diagram.yAxis,
                       }
                     },
                     plugins: {
