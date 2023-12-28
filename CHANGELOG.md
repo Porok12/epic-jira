@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/Porok12/epic-jira/compare/v0.3.6...v0.4.0) (2023-12-28)
+
+
+### Features
+
+* **app:** add time chart & better selectbox & better diagrams ([ab07c71](https://github.com/Porok12/epic-jira/commit/ab07c71ad56cebf60a137462164ae3b154aeb19f))
+
 ## [0.3.6](https://github.com/Porok12/epic-jira/compare/v0.3.5...v0.3.6) (2023-12-26)
 
 
