@@ -2,17 +2,29 @@ import React from 'react'
 import { Box, Button, Card, CardContent, CardHeader, Divider, Typography } from '@mui/material'
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { Form, useActionData, useLoaderData } from '@remix-run/react'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Colors, type ChartOptions, type ChartData } from 'chart.js'
+import { Form, useActionData, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import {
+  type ChartOptions,
+  type ChartData,
+  registerables,
+} from 'chart.js'
+import {
+  Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  TimeScale,
   PointElement,
+  ArcElement,
   BarElement,
   LineElement,
   Title,
+  Tooltip,
+  Legend,
+  Colors,
 } from 'chart.js'
 import { Doughnut, Line, Bar } from 'react-chartjs-2'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
+
 
 import { userPrefs } from '~/cookies.server'
 import { readConfig } from '~/config.server'
@@ -20,18 +32,27 @@ import { jiraClient } from '~/jira.server'
 import { jq } from '~/jq.server'
 import type { Data } from '~/routes/jira'
 
-// import 'chartjs-adapter-date-fns'
 
-ChartJS.register(ArcElement, Tooltip, Legend, Colors)
+import 'chartjs-adapter-moment'
 
+// ChartJS.register(...registerables)
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  TimeScale,
+  ArcElement,
   BarElement,
   PointElement,
   LineElement,
   Title,
+  Tooltip,
+  Legend,
+  Colors,
+  ChartDataLabels,
 )
+
+ChartJS.defaults.color = "rgba(255, 255, 255, 0.8)";
+ChartJS.defaults.font.size = 18;
 
 export const meta: MetaFunction = () => {
   return [
@@ -83,11 +104,22 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
           datasets.push({ value: value, name })
         }
         diagrams.push({ datasets, type: component.type, title: component.title })
+      } else if (component.type === 'time') {
+        const issues = await jiraClient.searchJira(component.query) as Data
+        let datasets = []
+        for (const { name, filter } of component.datasets) {
+          let value = await jq(filter, issues, { input: 'json', output: 'json' }) as object
+          if (component.accumulative) {
+            value = accumulateCustom(value as any)
+          }
+          datasets.push({ value, name })
+        }
+        diagrams.push({ datasets, type: component.type, title: component.title })
       }
     }
   }
 
-  return json({ diagrams, cookie, config })
+  return json({ diagrams, cookie })
 }
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
@@ -105,7 +137,8 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 }
 
 export default function Index() {
-  const { cookie, diagrams, config } = useLoaderData<typeof loader>()
+  // const { } = useRootLoaderData()
+  const { cookie, diagrams } = useLoaderData<typeof loader>()
   const {} = useActionData<typeof action>() ?? {}
 
   // const options: ChartOptions<'doughnut'> = {}
@@ -144,10 +177,6 @@ export default function Index() {
 
             <Typography variant="body1" whiteSpace="pre-wrap">
               {JSON.stringify(cookie, null, 2)}
-              <br />
-              {JSON.stringify(config)}
-              <br />
-              {JSON.stringify(diagrams, null, 2)}
             </Typography>
           </CardContent>
         </Card>
@@ -166,12 +195,29 @@ export default function Index() {
                   data={{
                     labels: diagram.datasets.map(ds => ds.name),
                     datasets: [
-                      { data: diagram.datasets.map(ds => ds.value) },
+                      {
+                        borderWidth: 0,
+                        data: diagram.datasets.map(ds => ds.value)
+                      },
                     ],
                   }}
                   options={{
                     parsing: {
                       key: 'value',
+                    },
+                    plugins: {
+                      datalabels: {
+                        formatter: (value, ctx) => {
+                          const datapoints = ctx.chart.data.datasets[0].data
+                          console.log(datapoints)
+                          const total = datapoints.reduce((total: any, datapoint: any) => total + Number.parseInt(datapoint), 0)
+                          const percentage = (value / total) * 100
+                          return percentage.toFixed(2) + '%'
+                        },
+                        labels: {
+                          value: {},
+                        },
+                      },
                     },
                   }}
                 />
@@ -206,12 +252,57 @@ export default function Index() {
                     parsing: {
                       xAxisKey: 'created',
                       yAxisKey: 'value',
+
                     },
-                    // scales: {
-                    //   x: {
-                    //     type: 'timeseries',
-                    //   },
-                    // },
+                    plugins: {
+                      datalabels: {
+                        labels: {
+                          value: null
+                        }
+                      }
+                    }
+                  }}
+                />
+              </div>
+            )
+          } else if (diagram.type === 'time') {
+            component = (
+              <div style={{ height: 400 }}>
+                <Line
+                  data={{
+                    datasets: diagram.datasets.map(ds => ({ data: ds.value })),
+                  }}
+                  options={{
+                    // backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    // borderColor: 'rgba(255, 255, 255, 0.1)',
+                    parsing: {
+                      xAxisKey: 'created',
+                      yAxisKey: 'value',
+                    },
+                    scales: {
+                      x: {
+                        type: 'time',
+                        min: '2023-09-01T00:00:00.000+0000',
+                        max: '2023-12-31T00:00:00.000+0000',
+                        time: {
+                          unit: 'week'
+                        },
+                        ticks: {
+                          // stepSize: 7,
+                        }
+                      },
+                      y: {
+                        min: -1,
+                        max: 6,
+                      }
+                    },
+                    plugins: {
+                      datalabels: {
+                        labels: {
+                          value: null
+                        }
+                      }
+                    }
                   }}
                 />
               </div>

@@ -39,14 +39,26 @@ export interface BarComponent {
   }[]
 }
 
+export interface TimeComponent {
+  title: string
+  query: string
+  type: 'time'
+  accumulative: true
+  datasets: {
+    name: string
+    filter: string
+  }[]
+}
+
 export type Component =
   NumberComponent |
   DoughnutComponent |
   LineComponent |
-  BarComponent
+  BarComponent |
+  TimeComponent
 
 export interface Dashboard {
-  title: string
+  name: string
   components: Component[]
 }
 
