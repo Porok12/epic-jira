@@ -146,7 +146,7 @@ export interface Watches {
 
 export const loader = async ({}: LoaderFunctionArgs) => {
   try {
-    const data = (await jiraClient.searchJira('order by created DESC')) as Data
+    const data = (await jiraClient.searchJira('order by created DESC', {maxResults: 120})) as Data
 
     console.log('Total issues', data.total)
 

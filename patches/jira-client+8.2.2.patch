@@ -1,8 +1,8 @@
 diff --git a/node_modules/jira-client/lib/jira.js b/node_modules/jira-client/lib/jira.js
-index b94c316..7381301 100644
+index b94c316..2e5f17d 100644
 --- a/node_modules/jira-client/lib/jira.js
 +++ b/node_modules/jira-client/lib/jira.js
-@@ -740,14 +740,12 @@ class JiraApi {
+@@ -740,14 +740,13 @@ class JiraApi {
  
    searchJira(searchString, optional = {}) {
      return this.doRequest(this.makeRequestHeader(this.makeUri({
@@ -15,6 +15,7 @@ index b94c316..7381301 100644
 +      query: {
          jql: searchString,
 -        ...optional
++        ...optional,
        }
 +    }), {
 +      followAllRedirects: true,
