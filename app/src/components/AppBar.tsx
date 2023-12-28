@@ -11,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { Autocomplete } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import { useRootLoaderData } from '~/root'
+import { useNavigation, useNavigate } from "@remix-run/react";
+import { useParams } from 'react-router'
 
 interface Props {
   // dashboards: string[]
@@ -19,9 +21,18 @@ interface Props {
 export default function AppBar(props: Props) {
   // const {dashboards} = props
   const { dashboards } = useRootLoaderData()
+  const navigate = useNavigate()
+  const params = useParams()
 
   const refresh = () => {
-    // TODO
+    console.log('todo')
+  }
+
+  const handleChange = (event: React.SyntheticEvent, value: string | null) => {
+    console.log(value);
+    if (value) {
+      navigate(`/dashboard/${value}`, {});
+    }
   }
 
   return (
@@ -47,6 +58,8 @@ export default function AppBar(props: Props) {
               sx={{ width: 300 }}
               size="small"
               renderInput={(params) => <TextField {...params} label="Dashboards" />}
+              onChange={handleChange}
+              defaultValue={params['id']}
             />
             {/*<Select*/}
             {/*  value={10}*/}

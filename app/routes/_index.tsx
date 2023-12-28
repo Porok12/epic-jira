@@ -254,12 +254,20 @@ export default function Index() {
                           size: 14,
                         },
                       },
+                      grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        tickColor: 'rgba(255, 255, 255, 0.1)'
+                      },
                     },
                     y: {
                       ticks: {
                         font: {
                           size: 14,
                         },
+                      },
+                      grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        tickColor: 'rgba(255, 255, 255, 0.1)'
                       },
                     },
                   },
@@ -295,6 +303,10 @@ export default function Index() {
                           size: 14,
                         },
                       },
+                      grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        tickColor: 'rgba(255, 255, 255, 0.1)'
+                      },
                       ...diagram.xAxis,
                     },
                     y: {
@@ -302,6 +314,11 @@ export default function Index() {
                         font: {
                           size: 14,
                         },
+                      },
+                      // backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        tickColor: 'rgba(255, 255, 255, 0.1)'
                       },
                       ...diagram.yAxis,
                     },
