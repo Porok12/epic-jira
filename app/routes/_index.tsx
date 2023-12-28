@@ -73,12 +73,11 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
   const diagrams = []
   for (const dashboard of config.dashboards) {
     for (const component of dashboard.components) {
+      const issues = await jiraClient.searchJira(component.query, {maxResults: 120}) as Data
       if (component.type === 'number') {
-        const issues = await jiraClient.searchJira(component.query) as Data
         const value = await jq(component.filter, issues, { input: 'json' }) as string
         diagrams.push({ value, type: component.type, title: component.title })
       } else if (component.type === 'doughnut') {
-        const issues = await jiraClient.searchJira(component.query) as Data
         let datasets = []
         for (const { name, filter } of component.datasets) {
           const value = await jq(filter, issues, { input: 'json', output: 'string' }) as object
@@ -86,7 +85,6 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
         }
         diagrams.push({ datasets, type: component.type, title: component.title })
       } else if (component.type === 'line') {
-        const issues = await jiraClient.searchJira(component.query) as Data
         let datasets = []
         for (const { name, filter } of component.datasets) {
           let value = await jq(filter, issues, { input: 'json', output: 'json' }) as object
@@ -97,7 +95,6 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
         }
         diagrams.push({ datasets, type: component.type, title: component.title })
       } else if (component.type === 'bar') {
-        const issues = await jiraClient.searchJira(component.query) as Data
         let datasets = []
         for (const { name, filter } of component.datasets) {
           const value = await jq(filter, issues, { input: 'json', output: 'string' }) as object
@@ -105,7 +102,6 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
         }
         diagrams.push({ datasets, type: component.type, title: component.title })
       } else if (component.type === 'time') {
-        const issues = await jiraClient.searchJira(component.query) as Data
         let datasets = []
         for (const { name, filter } of component.datasets) {
           let value = await jq(filter, issues, { input: 'json', output: 'json' }) as object
