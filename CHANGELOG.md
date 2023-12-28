@@ -1,3 +1,17 @@
+# [0.5.0](https://github.com/Porok12/epic-jira/compare/v0.4.2...v0.5.0) (2023-12-28)
+
+
+### Bug Fixes
+
+* **app:** customizable axis settings ([bd87351](https://github.com/Porok12/epic-jira/commit/bd8735157283b9a328ccb81fa62abb58e39fb83d))
+* **app:** fix layout ([fe11f93](https://github.com/Porok12/epic-jira/commit/fe11f93fca116c01baef7397cea59f80ba37028b))
+
+
+### Features
+
+* **app:** introduce dashboard page ([0d99b67](https://github.com/Porok12/epic-jira/commit/0d99b67ae63e13e49e3bf40eee335076774cc2b3))
+* **app:** jira search ([b2d1d4f](https://github.com/Porok12/epic-jira/commit/b2d1d4fc2e4dc30e063281b17357a0ff0e6d565d))
+
 ## [0.4.2](https://github.com/Porok12/epic-jira/compare/v0.4.1...v0.4.2) (2023-12-28)
 
 
