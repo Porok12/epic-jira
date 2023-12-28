@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/Porok12/epic-jira/compare/v0.4.0...v0.4.1) (2023-12-28)
+
+
+### Bug Fixes
+
+* **app:** allow more tickets ([21d7731](https://github.com/Porok12/epic-jira/commit/21d77315b6a00a2fc2a2906b300f9cd9a6b3aa4a))
+
 # [0.4.0](https://github.com/Porok12/epic-jira/compare/v0.3.6...v0.4.0) (2023-12-28)
 
 
