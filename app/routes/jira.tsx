@@ -1,7 +1,11 @@
-import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import { Box, Typography } from '@mui/material'
+import React from 'react'
+import { type ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { useActionData, useFetcher, useLoaderData } from '@remix-run/react'
+import { Box, Card, CardContent, Typography } from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton'
 import { jiraClient } from '~/jira.server'
+import TextField from '@mui/material/TextField'
+import { Form } from "@remix-run/react"
 
 export interface Data {
   expand:     string;
@@ -144,32 +148,60 @@ export interface Watches {
   isWatching: boolean;
 }
 
-export const loader = async ({}: LoaderFunctionArgs) => {
-  try {
-    const data = (await jiraClient.searchJira('order by created DESC', {maxResults: 120})) as Data
+// export const loader = async ({}: LoaderFunctionArgs) => {
+//   try {
+//     const data = (await jiraClient.searchJira('order by created DESC')) as Data
+//
+//     console.log('Total issues', data.total)
+//
+//     return json({ data })
+//   } catch (e) {
+//     console.error(e)
+//
+//     return json({ data: null })
+//   }
+// }
 
-    console.log('Total issues', data.total)
+
+export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+  try {
+    const body = await request.formData()
+    const jql = body.get('jql') as string
+    const data = (await jiraClient.searchJira(jql)) as Data
+
+    console.log('Total issues: ', data.total)
 
     return json({ data })
   } catch (e) {
-    console.error(e)
-
+    console.warn(e)
     return json({ data: null })
   }
+
+  return json({ data: null })
+  // return redirect('/', {})
 }
 
 export default function Config() {
-  const { data } = useLoaderData<typeof loader>()
-
-  if (data === null) {
-    return null
-  }
+  // const { data } = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
+  const fetcher = useFetcher<typeof action>()
+  const isPending = fetcher.state !== "idle"
 
   return (
-    <Box>
-      <Typography variant="body1" whiteSpace="pre-wrap">
-        {JSON.stringify(JSON.parse(JSON.stringify(data)), null, 2)}
-      </Typography>
+    <Box mt={2} sx={{width: '100%'}}>
+      <Card>
+        <CardContent>
+          <Box component={fetcher.Form} method="post" display="flex" gap={2} mb={2}>
+            <TextField name="jql" label="jql" defaultValue="order by created DESC" fullWidth/>
+            <LoadingButton type="submit" variant="outlined" loading={isPending} sx={{ minWidth: '100px'}}>
+              Query
+            </LoadingButton>
+          </Box>
+          <Typography variant="body1" whiteSpace="pre-wrap" fontFamily="monospace">
+            {JSON.stringify(JSON.parse(JSON.stringify(fetcher.data?.data || {})), null, 2)}
+          </Typography>
+        </CardContent>
+      </Card>
     </Box>
   )
 }

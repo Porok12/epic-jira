@@ -26,10 +26,10 @@ export default function Config() {
 
       <Divider />
 
-      <Box mt={2} mx={2}>
+      <Box mt={2}>
         <Card>
           <CardContent>
-            <Typography variant="body1" whiteSpace="pre-wrap">
+            <Typography variant="body1" whiteSpace="pre-wrap" fontFamily="monospace">
               {JSON.stringify(JSON.parse(config), null, 2)}
             </Typography>
           </CardContent>
