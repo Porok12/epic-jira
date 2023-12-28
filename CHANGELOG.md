@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/Porok12/epic-jira/compare/v0.4.1...v0.4.2) (2023-12-28)
+
+
+### Bug Fixes
+
+* **app:** add maxResults in dashboards ([56807b1](https://github.com/Porok12/epic-jira/commit/56807b118686cfcf8bfa7d36b948c6e9c81e353a))
+
 ## [0.4.1](https://github.com/Porok12/epic-jira/compare/v0.4.0...v0.4.1) (2023-12-28)
 
 
