@@ -72,7 +72,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
   const diagrams = []
   for (const dashboard of config.dashboards) {
     for (const component of dashboard.components) {
-      const issues = await jiraClient.searchJira(component.query, { maxResults: 120 }) as Data
+      const issues = await jiraClient.searchJira(component.query, { maxResults: component.limit || 50 }) as Data
       if (component.type === 'number') {
         const value = await jq(component.filter, issues, { input: 'json' }) as string
         diagrams.push({ value, type: component.type, title: component.title, width: component.width })

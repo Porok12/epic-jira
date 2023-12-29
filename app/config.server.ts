@@ -3,7 +3,8 @@ export { readFile, open } from 'node:fs/promises'
 
 export interface NumberComponent {
   title: string
-  width: number
+  width?: number
+  limit?: number
   query: string
   type: 'number'
   filter: string
@@ -11,7 +12,8 @@ export interface NumberComponent {
 
 export interface DoughnutComponent {
   title: string
-  width: number
+  width?: number
+  limit?: number
   query: string
   type: 'doughnut'
   datasets: {
@@ -22,7 +24,8 @@ export interface DoughnutComponent {
 
 export interface LineComponent {
   title: string
-  width: number
+  width?: number
+  limit?: number
   query: string
   type: 'line'
   accumulative: true
@@ -34,7 +37,8 @@ export interface LineComponent {
 
 export interface BarComponent {
   title: string
-  width: number
+  width?: number
+  limit?: number
   query: string
   type: 'bar'
   datasets: {
@@ -45,7 +49,8 @@ export interface BarComponent {
 
 export interface TimeComponent {
   title: string
-  width: number
+  width?: number
+  limit?: number
   query: string
   type: 'time'
   accumulative: true
