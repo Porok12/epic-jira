@@ -1,7 +1,8 @@
 {
   "branches": [
     "master",
-    "stable"
+    { "name": "devel", "prerelease": "beta" },
+    { "name": "epic-*", "prerelease": "alpha", "channel": "${name}" }
   ],
   "plugins": [
     [
@@ -13,15 +14,23 @@
             "type": "chore",
             "release": "patch"
           },
-          { 
-            "scope": "no-release", 
+          {
+            "scope": "no-release",
             "release": false
           }
         ]
       }
     ],
-    "@semantic-release/release-notes-generator",
-    "@semantic-release/changelog",
+    [
+      "@semantic-release/release-notes-generator",
+      {}
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "docs/CHANGELOG.md"
+      }
+    ],
     [
       "@semantic-release/npm",
       {}
@@ -36,8 +45,9 @@
       "@semantic-release/git",
       {
         "assets": [
-          "CHANGELOG.md",
+          "docs/CHANGELOG.md",
           "package.json",
+          "package-lock.json",
           "charts/epic-jira/Chart.yaml"
         ],
         "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"

@@ -27,13 +27,23 @@
 
 # EpicJira
 
-- [Remix Docs](https://remix.run/docs)
+## Example
 
-### DIY
+TODO
 
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
+## Deployment
 
-Make sure to deploy the output of `remix build`
+[Deployment.md](./docs/Deployment.md)
 
-- `build/`
-- `public/build/`
+## Versioning
+
+[Versioning.md](./docs/Versioning.md)
+
+## Changelog
+
+[CHANGELOG.md](./docs/CHANGELOG.md)
+
+## Considering
+
+- https://www.npmjs.com/package/semantic-release-slack-bot
+- 

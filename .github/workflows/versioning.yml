@@ -2,7 +2,7 @@ name: Versioning
 
 on:
   push:
-    branches: [ 'master' ]
+    branches: [ 'master', 'devel', 'ep-*' ]
     tags-ignore: [ '*' ]
     paths-ignore: [ '*' ]
 
