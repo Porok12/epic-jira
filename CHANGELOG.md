@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/Porok12/epic-jira/compare/v0.5.0...v0.5.1) (2023-12-29)
+
+
+### Bug Fixes
+
+* **app:** adjustable limit ([6db4848](https://github.com/Porok12/epic-jira/commit/6db4848fbacb9b3762774089a5ab1faff4240441))
+
 # [0.5.0](https://github.com/Porok12/epic-jira/compare/v0.4.2...v0.5.0) (2023-12-28)
 
 
