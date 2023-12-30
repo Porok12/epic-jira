@@ -1,7 +1,7 @@
 {
   "branches": [
     "master",
-    { "name": "devel", "prerelease": "beta" },
+    { "name": "devel", "prerelease": "beta", "channel": "false" },
     { "name": "epic-*", "prerelease": "alpha", "channel": "${name}" }
   ],
   "plugins": [

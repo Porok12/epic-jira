@@ -1,0 +1,8 @@
+!app/**/*
+
+charts/
+docs/
+patches
+build/
+public/
+.*/

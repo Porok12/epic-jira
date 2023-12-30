@@ -1,3 +1,23 @@
+## [0.5.2-beta.5](https://github.com/Porok12/epic-jira/compare/v0.5.2-beta.4...v0.5.2-beta.5) (2023-12-30)
+
+
+### Bug Fixes
+
+* **ci:** commit lint fixes ([a350524](https://github.com/Porok12/epic-jira/commit/a35052417fbf19c31ada96d8db08bbe426c684c4))
+
+## [0.5.2-beta.4](https://github.com/Porok12/epic-jira/compare/v0.5.2-beta.3...v0.5.2-beta.4) (2023-12-30)
+
+
+### Bug Fixes
+
+* **ci:** commit lint fixes ([80c9a9f](https://github.com/Porok12/epic-jira/commit/80c9a9fdd4afc9b33db88e2f8babeac5176fa971))
+
+## [0.5.2-beta.3](https://github.com/Porok12/epic-jira/compare/v0.5.2-beta.2...v0.5.2-beta.3) (2023-12-30)
+
+## [0.5.2-beta.2](https://github.com/Porok12/epic-jira/compare/v0.5.2-beta.1...v0.5.2-beta.2) (2023-12-30)
+
+## [0.5.2-beta.1](https://github.com/Porok12/epic-jira/compare/v0.5.1...v0.5.2-beta.1) (2023-12-29)
+
 ## [0.5.1](https://github.com/Porok12/epic-jira/compare/v0.5.0...v0.5.1) (2023-12-29)
 
 
