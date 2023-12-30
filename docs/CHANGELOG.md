@@ -1,3 +1,5 @@
+## [0.5.2-beta.3](https://github.com/Porok12/epic-jira/compare/v0.5.2-beta.2...v0.5.2-beta.3) (2023-12-30)
+
 ## [0.5.2-beta.2](https://github.com/Porok12/epic-jira/compare/v0.5.2-beta.1...v0.5.2-beta.2) (2023-12-30)
 
 ## [0.5.2-beta.1](https://github.com/Porok12/epic-jira/compare/v0.5.1...v0.5.2-beta.1) (2023-12-29)
