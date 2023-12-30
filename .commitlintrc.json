@@ -7,6 +7,16 @@
       2,
       "always",
       [
+        "build",
+        "ci",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "refactor",
+        "revert",
+        "style",
+        "test",
         "chore"
       ]
     ],
@@ -14,7 +24,10 @@
       1,
       "always",
       [
-        "sentence-case"
+        "sentence-case",
+        "start-case",
+        "pascal-case",
+        "upper-case"
       ]
     ]
   }
