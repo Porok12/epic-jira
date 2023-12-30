@@ -1,5 +1,21 @@
 {
   "extends": [
-    "@commitlint/config-conventional"
-  ]
+    "@commitlint/config-angular"
+  ],
+  "rules": {
+    "type-enum": [
+      2,
+      "always",
+      [
+        "chore"
+      ]
+    ],
+    "subject-case": [
+      1,
+      "always",
+      [
+        "sentence-case"
+      ]
+    ]
+  }
 }

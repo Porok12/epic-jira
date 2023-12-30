@@ -46,4 +46,4 @@ TODO
 ## Considering
 
 - https://www.npmjs.com/package/semantic-release-slack-bot
-- 
+- Better CI https://github.com/conventional-changelog/commitlint/blob/master/docs/reference-rules.md
