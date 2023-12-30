@@ -1,1 +1,1 @@
-export {run as jq} from 'node-jq';
+export { run as jq } from 'node-jq'

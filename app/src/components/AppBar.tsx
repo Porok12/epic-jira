@@ -11,33 +11,40 @@ import MenuItem from '@mui/material/MenuItem'
 import { Autocomplete } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import { useRootLoaderData } from '~/root'
-import { useNavigation, useNavigate } from "@remix-run/react";
-import { useParams } from 'react-router'
+import { useNavigation, useNavigate, useLocation } from '@remix-run/react'
+import { useParams } from '@remix-run/react'
+import Stack from '@mui/material/Stack'
 
 interface Props {
-  // dashboards: string[]
+  openDrawer: () => void
 }
 
 export default function AppBar(props: Props) {
-  // const {dashboards} = props
+  const { openDrawer } = props
+
   const { dashboards } = useRootLoaderData()
   const navigate = useNavigate()
+  const navigation = useNavigation()
   const params = useParams()
+  const location = useLocation()
 
   const refresh = () => {
-    console.log('todo')
+    navigate(location.pathname)
   }
 
   const handleChange = (event: React.SyntheticEvent, value: string | null) => {
-    console.log(value);
     if (value) {
-      navigate(`/dashboard/${value}`, {});
+      navigate(`/dashboard/${value}`, {})
     }
   }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <MuiAppBar position="static" color="default">
+      <MuiAppBar
+        position="fixed"
+        color="default"
+        sx={{ zIndex: theme => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
           <IconButton
             size="large"
@@ -45,36 +52,50 @@ export default function AppBar(props: Props) {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={openDrawer}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Welcome to EpicJira
+            {/*{JSON.stringify(navigation)}*/}
           </Typography>
-          <Box m={2}>
+          <Box
+            sx={{
+              display: location.pathname.startsWith('/dashboard')
+                ? 'block'
+                : 'none',
+            }}
+          >
             <Autocomplete
+              disabled={navigation.state !== 'idle'}
               disablePortal
               options={dashboards}
               sx={{ width: 300 }}
               size="small"
-              renderInput={(params) => <TextField {...params} label="Dashboards" />}
+              renderInput={params => (
+                <TextField {...params} label="Dashboards" />
+              )}
               onChange={handleChange}
               defaultValue={params['id']}
             />
-            {/*<Select*/}
-            {/*  value={10}*/}
-            {/*  label="Dashboard"*/}
-            {/*  size="small"*/}
-            {/*  variant="standard"*/}
-            {/*>*/}
-            {/*  <MenuItem value={10}>Ten</MenuItem>*/}
-            {/*  <MenuItem value={20}>Twenty</MenuItem>*/}
-            {/*  <MenuItem value={30}>Thirty</MenuItem>*/}
-            {/*</Select>*/}
           </Box>
-          <IconButton onClick={refresh} color="inherit">
-            <RefreshIcon />
-          </IconButton>
+          <Box
+            ml={2}
+            sx={{
+              display: location.pathname.startsWith('/dashboard')
+                ? 'block'
+                : 'none',
+            }}
+          >
+            <IconButton
+              disabled={navigation.state !== 'idle'}
+              onClick={refresh}
+              color="inherit"
+            >
+              <RefreshIcon />
+            </IconButton>
+          </Box>
         </Toolbar>
       </MuiAppBar>
     </Box>

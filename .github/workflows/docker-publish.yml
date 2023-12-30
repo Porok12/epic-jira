@@ -2,7 +2,7 @@ name: Docker Publish
 
 on:
   push:
-    tags: [ '*' ] # v*.*.*(-*)?
+    tags: ['*'] # v*.*.*(-*)?
 
 env:
   REGISTRY: ghcr.io
@@ -10,7 +10,6 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read

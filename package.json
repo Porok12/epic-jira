@@ -20,7 +20,9 @@
     "build": "remix build",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "format": "prettier . --write",
+    "lint": "eslint 'app/**/*.{ts, tsx}'"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
@@ -61,6 +63,8 @@
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.38.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.2",
     "prettier": "^3.1.0",
     "semantic-release": "^22.0.8",
     "typescript": "^5.1.6"

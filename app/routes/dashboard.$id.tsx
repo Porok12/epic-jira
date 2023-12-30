@@ -1,12 +1,18 @@
 import React from 'react'
 import { useParams } from 'react-router'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { readConfig } from '~/config.server'
-import { Form, useLoaderData } from '@remix-run/react'
-import { jiraClient } from '~/jira.server'
-import type { Data } from '~/routes/jira'
-import { jq } from '~/jq.server'
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material'
+import { Form, useLoaderData, useNavigation } from '@remix-run/react'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Divider,
+  Grid,
+  Typography,
+} from '@mui/material'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,8 +29,12 @@ import {
 } from 'chart.js'
 import { Doughnut, Line, Bar } from 'react-chartjs-2'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-
 import 'chartjs-adapter-moment'
+
+import { readConfig } from '~/config.server'
+import { jiraClient } from '~/jira.server'
+import type { Data } from '~/routes/jira'
+import { jq } from '~/jq.server'
 
 ChartJS.register(
   CategoryScale,
@@ -44,7 +54,11 @@ ChartJS.register(
 ChartJS.defaults.color = 'rgba(255, 255, 255, 0.8)'
 ChartJS.defaults.font.size = 18
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({
+  request,
+  params,
+  context,
+}: LoaderFunctionArgs) => {
   const config = await readConfig()
 
   console.log(params)
@@ -55,42 +69,79 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
   }
   // return json({ dashboard })
 
-  const accumulateCustom = (array: any[]) => array.map((sum => value => ({ ...value, value: sum += value.value }))(0))
+  const accumulateCustom = (array: any[]) =>
+    array.map((sum => value => ({ ...value, value: (sum += value.value) }))(0))
 
   const diagrams = []
   for (const component of dashboard.components) {
-    const issues = await jiraClient.searchJira(component.query, { maxResults: component.limit || 50 }) as Data
+    const issues = (await jiraClient.searchJira(component.query, {
+      maxResults: component.limit || 50,
+    })) as Data
     if (component.type === 'number') {
-      const value = await jq(component.filter, issues, { input: 'json' }) as string
-      diagrams.push({ value, type: component.type, title: component.title, width: component.width })
+      const value = (await jq(component.filter, issues, {
+        input: 'json',
+      })) as string
+      diagrams.push({
+        value,
+        type: component.type,
+        title: component.title,
+        width: component.width,
+      })
     } else if (component.type === 'doughnut') {
       let datasets = []
       for (const { name, filter } of component.datasets) {
-        const value = await jq(filter, issues, { input: 'json', output: 'string' }) as object
+        const value = (await jq(filter, issues, {
+          input: 'json',
+          output: 'string',
+        })) as object
         datasets.push({ value, name })
       }
-      diagrams.push({ datasets, type: component.type, title: component.title, width: component.width })
+      diagrams.push({
+        datasets,
+        type: component.type,
+        title: component.title,
+        width: component.width,
+      })
     } else if (component.type === 'line') {
       let datasets = []
       for (const { name, filter } of component.datasets) {
-        let value = await jq(filter, issues, { input: 'json', output: 'json' }) as object
+        let value = (await jq(filter, issues, {
+          input: 'json',
+          output: 'json',
+        })) as object
         if (component.accumulative) {
           value = accumulateCustom(value as any)
         }
         datasets.push({ value, name })
       }
-      diagrams.push({ datasets, type: component.type, title: component.title, width: component.width })
+      diagrams.push({
+        datasets,
+        type: component.type,
+        title: component.title,
+        width: component.width,
+      })
     } else if (component.type === 'bar') {
       let datasets = []
       for (const { name, filter } of component.datasets) {
-        const value = await jq(filter, issues, { input: 'json', output: 'string' }) as string
+        const value = (await jq(filter, issues, {
+          input: 'json',
+          output: 'string',
+        })) as string
         datasets.push({ value: value /*Number.parseInt(value)*/, name })
       }
-      diagrams.push({ datasets, type: component.type, title: component.title, width: component.width })
+      diagrams.push({
+        datasets,
+        type: component.type,
+        title: component.title,
+        width: component.width,
+      })
     } else if (component.type === 'time') {
       let datasets = []
       for (const { name, filter } of component.datasets) {
-        let value = await jq(filter, issues, { input: 'json', output: 'json' }) as object
+        let value = (await jq(filter, issues, {
+          input: 'json',
+          output: 'json',
+        })) as object
         if (component.accumulative) {
           value = accumulateCustom(value as any)
         }
@@ -113,6 +164,21 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 export default function Dashboard() {
   const params = useParams()
   const { /*dashboard*/ diagrams } = useLoaderData<typeof loader>()
+  const navigation = useNavigation()
+
+  if (navigation.state !== 'idle') {
+    return (
+      <Box
+        display="flex"
+        width="100%"
+        height="100%"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress sx={{ mt: 32 }} size={64} />
+      </Box>
+    )
+  }
 
   return (
     <>
@@ -120,6 +186,7 @@ export default function Dashboard() {
       <Box flexGrow={1}>
         <Typography variant="h4" component="h1" gutterBottom>
           Dashboard
+          {/*{JSON.stringify(params)}*/}
         </Typography>
 
         <Divider />
@@ -153,7 +220,11 @@ export default function Dashboard() {
                       datalabels: {
                         formatter: (value, ctx) => {
                           const datapoints = ctx.chart.data.datasets[0].data
-                          const total = datapoints.reduce((total: any, datapoint: any) => total + Number.parseInt(datapoint), 0)
+                          const total = datapoints.reduce(
+                            (total: any, datapoint: any) =>
+                              total + Number.parseInt(datapoint),
+                            0,
+                          )
                           const percentage = (value / total) * 100
                           return percentage.toFixed(2) + '%'
                         },
@@ -170,7 +241,10 @@ export default function Dashboard() {
                 <Bar
                   data={{
                     labels: ['data'],
-                    datasets: diagram.datasets.map(ds => ({ data: ds.value, label: ds.name }))
+                    datasets: diagram.datasets.map(ds => ({
+                      data: ds.value,
+                      label: ds.name,
+                    })),
                   }}
                   options={{}}
                 />
@@ -179,7 +253,10 @@ export default function Dashboard() {
               component = (
                 <Line
                   data={{
-                    datasets: diagram.datasets.map(ds => ({ data: ds.value, label: ds.name })),
+                    datasets: diagram.datasets.map(ds => ({
+                      data: ds.value,
+                      label: ds.name,
+                    })),
                   }}
                   options={{
                     parsing: {
@@ -195,7 +272,7 @@ export default function Dashboard() {
                         },
                         grid: {
                           color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)'
+                          tickColor: 'rgba(255, 255, 255, 0.1)',
                         },
                       },
                       y: {
@@ -206,7 +283,7 @@ export default function Dashboard() {
                         },
                         grid: {
                           color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)'
+                          tickColor: 'rgba(255, 255, 255, 0.1)',
                         },
                       },
                     },
@@ -224,7 +301,10 @@ export default function Dashboard() {
               component = (
                 <Line
                   data={{
-                    datasets: diagram.datasets.map(ds => ({ data: ds.value, label: ds.name })),
+                    datasets: diagram.datasets.map(ds => ({
+                      data: ds.value,
+                      label: ds.name,
+                    })),
                   }}
                   options={{
                     parsing: {
@@ -244,7 +324,7 @@ export default function Dashboard() {
                         },
                         grid: {
                           color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)'
+                          tickColor: 'rgba(255, 255, 255, 0.1)',
                         },
                         ...diagram.xAxis,
                       },
@@ -256,11 +336,10 @@ export default function Dashboard() {
                         },
                         grid: {
                           color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)'
+                          tickColor: 'rgba(255, 255, 255, 0.1)',
                         },
                         ...diagram.yAxis,
                       },
-
                     },
                     plugins: {
                       datalabels: {
@@ -277,7 +356,14 @@ export default function Dashboard() {
             }
             return (
               <Grid item xs={diagram?.width || 6}>
-                <Card key={diagram.title} sx={{ /*height: '100%'*/ }}>
+                <Card
+                  key={diagram.title}
+                  sx={
+                    {
+                      /*height: '100%'*/
+                    }
+                  }
+                >
                   <CardHeader title={diagram.title} />
                   <CardContent sx={{ minHeight: '200px', maxHeight: '600px' }}>
                     {component}

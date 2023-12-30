@@ -1,5 +1,10 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
+  // routes(defineRoutes) {
+  //   return defineRoutes((route) => {
+  //     route("/", "home/route.tsx", { index: true });
+  //   });
+  // },
   ignoredRouteFiles: ['**/.*'],
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",

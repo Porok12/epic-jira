@@ -1,11 +1,14 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { useActionData, useLoaderData } from '@remix-run/react'
-
+import { useActionData, useLoaderData, useNavigate } from '@remix-run/react'
+import { useEffect } from 'react'
 
 import { userPrefs } from '~/cookies.server'
 import { readConfig } from '~/config.server'
-
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,7 +17,11 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({
+  request,
+  params,
+  context,
+}: LoaderFunctionArgs) => {
   const cookieHeader = request.headers.get('Cookie')
   const cookie = (await userPrefs.parse(cookieHeader)) || {}
 
@@ -23,7 +30,11 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
   return json({ dashboards: config.dashboards, cookie })
 }
 
-export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+export const action = async ({
+  request,
+  params,
+  context,
+}: ActionFunctionArgs) => {
   const cookieHeader = request.headers.get('Cookie')
   const cookie = (await userPrefs.parse(cookieHeader)) || {}
   const bodyParams = await request.formData()
@@ -40,6 +51,9 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 export default function Index() {
   const { dashboards, cookie } = useLoaderData<typeof loader>()
   const {} = useActionData<typeof action>() ?? {}
+  const navigate = useNavigate()
+
+  useEffect(() => navigate('/dashboard'), [])
 
   return null
 }

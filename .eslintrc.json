@@ -3,7 +3,8 @@
     "@remix-run/eslint-config",
     "@remix-run/eslint-config/node",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
