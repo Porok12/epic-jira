@@ -11,8 +11,13 @@ import {
   CircularProgress,
   Divider,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
   Typography,
 } from '@mui/material'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -152,6 +157,17 @@ export const loader = async ({
         width: component.width,
         xAxis: component.xAxis,
         yAxis: component.yAxis,
+        type: component.type,
+        title: component.title,
+      })
+    } else if (component.type === 'list') {
+      const values = (await jq(component.filter, issues, {
+        input: 'json',
+        output: 'json',
+      })) as any[]
+      diagrams.push({
+        values: values.map(value =>({...value, link: 'https://' + process.env.JIRA_HOST + '/browse/' + value.key})),
+        width: component.width,
         type: component.type,
         title: component.title,
       })
@@ -350,6 +366,22 @@ export default function Dashboard() {
                     },
                   }}
                 />
+              )
+            } else if (diagram.type === 'list') {
+              console.log(diagram.values)
+              component = (
+                <List dense={false}>
+                  {diagram.values.map((value) =>
+                    <ListItem
+                      secondaryAction={
+                        <IconButton component={'a'} target='blank' href={value.link} edge="end">
+                          <OpenInNewIcon />
+                        </IconButton>
+                      }>
+                      <ListItemText primary={value.fields.summary}/>
+                    </ListItem>,
+                  )}
+                </List>
               )
             } else {
               component = JSON.stringify(diagram)

@@ -1,4 +1,5 @@
 import { open } from 'node:fs/promises'
+import { a } from 'vite-node/types-63205a44'
 export { readFile, open } from 'node:fs/promises'
 
 export interface NumberComponent {
@@ -62,12 +63,23 @@ export interface TimeComponent {
   }[]
 }
 
+export interface ListComponent {
+  title: string
+  width?: number
+  limit?: number
+  query: string
+  type: 'list'
+  filter: string
+  values: any[]
+}
+
 export type Component =
   | NumberComponent
   | DoughnutComponent
   | LineComponent
   | BarComponent
   | TimeComponent
+  | ListComponent
 
 export interface Dashboard {
   name: string
