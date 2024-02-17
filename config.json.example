@@ -1,0 +1,117 @@
+{
+  "dashboards": [
+    {
+      "name": "MyDashboard",
+      "components": [
+        {
+          "type": "doughnut",
+          "title": "Doughnut",
+          "query": "order by created DESC",
+          "datasets": [
+            {
+              "name": "roadmap",
+              "filter": ".issues | map(select(.fields.labels | contains([\"show\"]))) | length"
+            },
+            {
+              "name": "request",
+              "filter": ".issues | map(select(.fields.labels)) | length"
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "title": "Number",
+          "query": "order by created DESC",
+          "name": "Number of tickets",
+          "filter": ".issues | length"
+        },
+        {
+          "type": "bar",
+          "title": "Bar",
+          "query": "order by created DESC",
+          "labels": ["label1"],
+          "datasets": [
+            {
+              "name": "Dataset1",
+              "filter": ".issues | map(select(.fields.labels | contains([\"show\"]))) | length"
+            },
+            {
+              "name": "Dataset2",
+              "filter": ".issues | map(select(.fields.labels)) | length"
+            }
+          ]
+        },
+        {
+          "type": "bar",
+          "title": "Bar",
+          "query": "order by created DESC",
+          "labels": ["label1", "label2"],
+          "datasets": [
+            {
+              "name": "Dataset1",
+              "filter": ".issues | map(select(.fields.customfield_10044) .fields.customfield_10044)"
+            }
+          ]
+        },
+        {
+          "type": "line",
+          "title": "Line",
+          "width": 12,
+          "query": "order by created ASC",
+          "accumulative": true,
+          "datasets": [
+            {
+              "name": "Dataset1",
+              "filter": ".issues | map({key: .key, value: 1})"
+            },
+            {
+              "name": "Dataset2",
+              "filter": ".issues | map({key: .key, value: 2})"
+            }
+          ]
+        },
+        {
+          "type": "time",
+          "title": "Line",
+          "query": "order by created ASC",
+          "width": 12,
+          "accumulative": true,
+          "datasets": [
+            {
+              "name": "Dataset1",
+              "filter": ".issues | map({key: .key, value: 1, time: .fields.created})"
+            },
+            {
+              "name": "Dataset2",
+              "filter": ".issues | map({key: .key, value: 2, time: .fields.updated})"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Second",
+      "components": [
+        {
+          "type": "number",
+          "title": "Number",
+          "query": "order by created DESC",
+          "name": "Number of tickets",
+          "filter": ".issues | length"
+        }
+      ]
+    },
+    {
+      "name": "Testing",
+      "components": [
+        {
+          "type": "list",
+          "title": "List - https://mui.com/material-ui/react-list/",
+          "query": "order by created DESC",
+          "name": "List of tickets",
+          "filter": ".issues"
+        }
+      ]
+    }
+  ]
+}

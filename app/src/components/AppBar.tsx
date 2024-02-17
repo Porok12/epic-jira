@@ -34,7 +34,8 @@ export default function AppBar(props: Props) {
 
   const handleChange = (event: React.SyntheticEvent, value: string | null) => {
     if (value) {
-      navigate(`/dashboard/${value}`, {})
+      const sanitizedValue = encodeURIComponent(value);
+      navigate(`/dashboard/${sanitizedValue}`, {})
     }
   }
 
