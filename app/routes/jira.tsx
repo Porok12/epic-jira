@@ -6,11 +6,13 @@ import {
   redirect,
 } from '@remix-run/node'
 import { useActionData, useFetcher, useLoaderData } from '@remix-run/react'
-import { Box, Card, CardContent, Typography } from '@mui/material'
+import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { jiraClient } from '~/jira.server'
 import TextField from '@mui/material/TextField'
 import { Form } from '@remix-run/react'
+
+import { jiraClient } from '~/jira.server'
+import { jq } from '~/jq.server'
 
 export interface Data {
   expand: string
@@ -175,18 +177,17 @@ export const action = async ({
   try {
     const body = await request.formData()
     const jql = body.get('jql') as string
+    const filter = body.get('jq') as string
     const data = (await jiraClient.searchJira(jql)) as Data
+    const parsedData = await jq(filter, data, { input: 'json', output: 'json' })
 
     console.log('Total issues: ', data.total)
 
-    return json({ data })
+    return json({ data: parsedData })
   } catch (e) {
     console.warn(e)
     return json({ data: null })
   }
-
-  return json({ data: null })
-  // return redirect('/', {})
 }
 
 export default function Config() {
@@ -199,7 +200,7 @@ export default function Config() {
     <Box mt={2} sx={{ width: '100%' }}>
       <Card>
         <CardContent>
-          <Box
+          <Stack
             component={fetcher.Form}
             method="post"
             display="flex"
@@ -212,6 +213,12 @@ export default function Config() {
               defaultValue="order by created DESC"
               fullWidth
             />
+            <TextField
+              name="jq"
+              label="jq"
+              defaultValue=".issues"
+              fullWidth
+            />
             <LoadingButton
               type="submit"
               variant="outlined"
@@ -220,7 +227,8 @@ export default function Config() {
             >
               Query
             </LoadingButton>
-          </Box>
+            <Divider />
+          </Stack>
           <Typography
             variant="body1"
             whiteSpace="pre-wrap"
