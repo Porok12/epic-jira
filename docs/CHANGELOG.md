@@ -1,3 +1,13 @@
+# [0.6.0](https://github.com/Porok12/epic-jira/compare/v0.5.2...v0.6.0) (2024-02-17)
+
+
+### Features
+
+* **app:** add list component ([00b4500](https://github.com/Porok12/epic-jira/commit/00b45005ae59918b6638dd88659d91925b21b7b2))
+* **app:** advanced jira search ([74e5dd0](https://github.com/Porok12/epic-jira/commit/74e5dd031b3ae43891734c5f0b89014b29528999))
+* **app:** extract utils to separate file ([7eced9a](https://github.com/Porok12/epic-jira/commit/7eced9a932a7bb406d085df1028eff8dc002b80e))
+* **app:** refactoring ([ca39277](https://github.com/Porok12/epic-jira/commit/ca39277f610e3d01f237a7462e49e7a639a9429c))
+
 ## [0.5.2](https://github.com/Porok12/epic-jira/compare/v0.5.1...v0.5.2) (2023-12-30)
 
 
