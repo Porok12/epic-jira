@@ -36,6 +36,7 @@ import { Doughnut, Line, Bar } from 'react-chartjs-2'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import 'chartjs-adapter-moment'
 
+import { accumulateCustom } from '~/src/utils'
 import { readConfig } from '~/config.server'
 import { jiraClient } from '~/jira.server'
 import type { Data } from '~/routes/jira'
@@ -66,16 +67,10 @@ export const loader = async ({
 }: LoaderFunctionArgs) => {
   const config = await readConfig()
 
-  console.log(params)
-
   const dashboard = config.dashboards.find(db => db.name === params['id'])
   if (!dashboard) {
     return json({ diagrams: [] })
   }
-  // return json({ dashboard })
-
-  const accumulateCustom = (array: any[]) =>
-    array.map((sum => value => ({ ...value, value: (sum += value.value) }))(0))
 
   const diagrams = []
   for (const component of dashboard.components) {
