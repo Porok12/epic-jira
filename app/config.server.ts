@@ -1,74 +1,63 @@
 import { open } from 'node:fs/promises'
-import { a } from 'vite-node/types-63205a44'
 export { readFile, open } from 'node:fs/promises'
 
-export interface NumberComponent {
-  title: string
-  width?: number
-  limit?: number
+import { DiagramType } from '~/src/types'
+
+// export enum ComponentType {
+//   Number = 'number',
+//   Doughnut = 'doughnut',
+//   Line = 'line',
+//   Bar = 'bar',
+//   Time = 'time',
+//   List = 'list',
+// }
+
+interface AbstractComponent<T extends DiagramType> {
+  type: T
+  title: string // Diagram name
+  width?: number // Diagram width
   query: string
-  type: 'number'
+  limit?: number // Result limit
+}
+
+export interface NumberComponent extends AbstractComponent<DiagramType.Number> {
   filter: string
 }
 
-export interface DoughnutComponent {
-  title: string
-  width?: number
-  limit?: number
-  query: string
-  type: 'doughnut'
+export interface DoughnutComponent extends AbstractComponent<DiagramType.Doughnut> {
   datasets: {
     name: string
     filter: string
   }[]
 }
 
-export interface LineComponent {
-  title: string
-  width?: number
-  limit?: number
-  query: string
-  type: 'line'
-  accumulative: true
+export interface LineComponent extends AbstractComponent<DiagramType.Line> {
+  accumulative?: boolean
   datasets: {
     name: string
     filter: string
   }[]
 }
 
-export interface BarComponent {
-  title: string
-  width?: number
-  limit?: number
-  query: string
-  type: 'bar'
+export interface BarComponent extends AbstractComponent<DiagramType.Bar> {
+  labels: string[]
   datasets: {
     name: string
     filter: string
   }[]
 }
 
-export interface TimeComponent {
-  title: string
-  width?: number
-  limit?: number
-  query: string
-  type: 'time'
-  accumulative: true
+export interface TimeComponent extends AbstractComponent<DiagramType.Time> {
   xAxis: object
   yAxis: object
+  accumulative?: boolean
   datasets: {
     name: string
     filter: string
   }[]
 }
 
-export interface ListComponent {
-  title: string
-  width?: number
-  limit?: number
-  query: string
-  type: 'list'
+export interface ListComponent extends AbstractComponent<DiagramType.List> {
   filter: string
   values: any[]
 }

@@ -11,10 +11,10 @@ import { Box, CircularProgress, Typography } from '@mui/material'
 import { readConfig } from '~/config.server'
 
 export const loader = async ({
-  request,
-  params,
-  context,
-}: LoaderFunctionArgs) => {
+                               request,
+                               params,
+                               context,
+                             }: LoaderFunctionArgs) => {
   const config = await readConfig()
   return json({ dashboards: config.dashboards })
 }
@@ -27,7 +27,8 @@ export default function Index() {
 
   useEffect(() => {
     if (dashboards.length > 0) {
-      navigate(`/dashboard/${dashboards[0].name}`)
+      const dashboardName = encodeURIComponent(dashboards[0].name)
+      navigate(`/dashboard/${dashboardName}`)
     }
   }, [])
 

@@ -29,7 +29,42 @@
 
 ## Example
 
-TODO
+```json
+{
+  "type": "line",
+  "title": "My line chart",
+  "query": "order by created ASC",
+  "accumulative": true,
+  "datasets": [
+    {
+      "name": "Dataset1",
+      "filter": ".issues | map({key: .key, value: 1})"
+    },
+    {
+      "name": "Dataset2",
+      "filter": ".issues | map({key: .key, value: 2})"
+    }
+  ]
+}
+```
+
+```json
+{
+  "type": "bar",
+  "title": "Bar",
+  "query": "order by created DESC",
+  "datasets": [
+    {
+      "name": "Dataset1",
+      "filter": ".issues | map(select(.fields.labels | contains([\"show\"])) {label: .status, value: 1})"
+    },
+    {
+      "name": "Dataset2",
+      "filter": ".issues | map(select(.) {label: .status, value: 1})"
+    }
+  ]
+}
+```
 
 ## Deployment
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { useParams } from 'react-router'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, useLoaderData, useNavigation } from '@remix-run/react'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import {
   Box,
   Button,
@@ -17,7 +18,6 @@ import {
   IconButton,
   Typography,
 } from '@mui/material'
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -31,11 +31,16 @@ import {
   Tooltip,
   Legend,
   Colors,
+  CoreChartOptions,
+  ChartOptions,
+  ChartType,
 } from 'chart.js'
 import { Doughnut, Line, Bar } from 'react-chartjs-2'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+// import ChartTrendline from 'chartjs-plugin-trendline'
 import 'chartjs-adapter-moment'
 
+import { DiagramType } from '~/src/types'
 import { accumulateCustom } from '~/src/utils'
 import { readConfig } from '~/config.server'
 import { jiraClient } from '~/jira.server'
@@ -55,117 +60,358 @@ ChartJS.register(
   Legend,
   Colors,
   ChartDataLabels,
+  // ChartTrendline,
 )
 
 ChartJS.defaults.color = 'rgba(255, 255, 255, 0.8)'
 ChartJS.defaults.font.size = 18
 
+interface AbstractDiagram<T extends DiagramType> {
+  type: T
+  title: string // Diagram name
+  width?: number // Diagram width
+}
+
+export interface NumberDiagram extends AbstractDiagram<DiagramType.Number> {
+  value: string
+}
+
+export interface DoughnutDiagram extends AbstractDiagram<DiagramType.Doughnut> {
+  datasets: { name: string, value: any }[]
+}
+
+export interface LineDiagram extends AbstractDiagram<DiagramType.Line> {
+  datasets: { name: string, data: any }[]
+}
+
+export interface BarDiagram extends AbstractDiagram<DiagramType.Bar> {
+  labels: string[]
+  datasets: { name: string, data: any }[]
+}
+
+export interface TimeDiagram extends AbstractDiagram<DiagramType.Time> {
+  xAxis: object
+  yAxis: object
+  datasets: { name: string, data: any }[]
+}
+
+export interface ListDiagram extends AbstractDiagram<DiagramType.List> {
+  values: { name: string, link: string, fields: any }[]
+}
+
+export type Diagram =
+  | NumberDiagram
+  | DoughnutDiagram
+  | LineDiagram
+  | BarDiagram
+  | TimeDiagram
+  | ListDiagram
+
+const doughnutOptions: ChartOptions<'doughnut'> = {
+  parsing: {
+    key: 'value',
+    // xAxisKey: 'key',
+    // yAxisKey: 'value',
+  },
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.1)',
+        tickColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+    y: {
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.1)',
+        tickColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+  },
+  plugins: {
+    datalabels: {
+      formatter: (value, ctx) => {
+        const datapoints = ctx.chart.data.datasets[0].data
+        const total = datapoints.reduce(
+          (total: any, datapoint: any) =>
+            total + Number.parseInt(datapoint),
+          0,
+        )
+        const percentage = (value / total) * 100
+        return percentage.toFixed(2) + '%'
+      },
+      labels: {
+        value: {},
+      },
+    },
+  } as any, // FIX: proper type
+}
+
+const lineOptions: ChartOptions<'line'> = {
+  parsing: {
+    xAxisKey: 'key',
+    yAxisKey: 'value',
+  },
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.1)',
+        tickColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+    y: {
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.1)',
+        tickColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+  },
+  plugins: {
+    datalabels: {
+      labels: {
+        value: null,
+      },
+    },
+  } as any, // FIX: proper type
+}
+
+const timeOptions = (xAxis: object, yAxis: object): ChartOptions<'line'> => ({
+  parsing: {
+    xAxisKey: 'time',
+    yAxisKey: 'value',
+  },
+  scales: {
+    x: {
+      type: 'time',
+      time: {
+        unit: 'week',
+      },
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.1)',
+        tickColor: 'rgba(255, 255, 255, 0.1)',
+      },
+      ...xAxis,
+    },
+    y: {
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.1)',
+        tickColor: 'rgba(255, 255, 255, 0.1)',
+      },
+      ...yAxis,
+    },
+  },
+  plugins: {
+    datalabels: {
+      labels: {
+        value: null,
+      },
+    },
+  } as any, // FIX: proper type
+})
+
+
 export const loader = async ({
-  request,
-  params,
-  context,
-}: LoaderFunctionArgs) => {
+                               request,
+                               params,
+                               context,
+                             }: LoaderFunctionArgs) => {
   const config = await readConfig()
 
+  const diagrams: Diagram[] = []
   const dashboard = config.dashboards.find(db => db.name === params['id'])
   if (!dashboard) {
-    return json({ diagrams: [] })
+    return json({ diagrams })
   }
 
-  const diagrams = []
   for (const component of dashboard.components) {
+    let datasets = []
+
+    // Obtain tickets
     const issues = (await jiraClient.searchJira(component.query, {
       maxResults: component.limit || 50,
     })) as Data
-    if (component.type === 'number') {
-      const value = (await jq(component.filter, issues, {
-        input: 'json',
-      })) as string
-      diagrams.push({
-        value,
-        type: component.type,
-        title: component.title,
-        width: component.width,
-      })
-    } else if (component.type === 'doughnut') {
-      let datasets = []
-      for (const { name, filter } of component.datasets) {
-        const value = (await jq(filter, issues, {
-          input: 'json',
-          output: 'string',
-        })) as object
-        datasets.push({ value, name })
-      }
-      diagrams.push({
-        datasets,
-        type: component.type,
-        title: component.title,
-        width: component.width,
-      })
-    } else if (component.type === 'line') {
-      let datasets = []
-      for (const { name, filter } of component.datasets) {
-        let value = (await jq(filter, issues, {
+
+    // Parse component type
+    switch (component.type) {
+      case DiagramType.Number:
+
+        const value = (await jq(component.filter, issues, { input: 'json' })) as string
+        diagrams.push({
+          value,
+          type: component.type,
+          title: component.title,
+          width: component.width,
+        })
+
+        break
+      case DiagramType.Doughnut:
+
+        for (const { name, filter } of component.datasets) {
+          const value = (await jq(filter, issues, {
+            input: 'json',
+            output: 'string',
+          })) as string
+
+          datasets.push({ value, name })
+        }
+        diagrams.push({
+          datasets,
+          type: component.type,
+          title: component.title,
+          width: component.width,
+        })
+
+        break
+      case DiagramType.Line:
+
+        for (const { name, filter } of component.datasets) {
+          let data = (await jq(filter, issues, {
+            input: 'json',
+            output: 'json',
+          })) as any[]
+
+
+          if (!Array.isArray(data)) {
+            data = [data]
+          }
+
+          if (component.accumulative) {
+            data = accumulateCustom(data)
+          }
+
+          datasets.push({ data, name })
+        }
+        diagrams.push({
+          datasets,
+          type: component.type,
+          title: component.title,
+          width: component.width,
+        })
+
+        break
+      case DiagramType.Bar:
+
+        for (const { name, filter } of component.datasets) {
+          let data = (await jq(filter, issues, {
+            input: 'json',
+            output: 'json',
+          })) as any[]
+
+          if (!Array.isArray(data)) {
+            data = [data]
+          }
+
+          data = data.map(value => {
+            if (!isNaN(value)) {
+              value = Number.parseInt(value)
+            }
+            return value
+          })
+
+          if (Array.isArray(data)) {
+            data = data.map(value => {
+              if (!isNaN(value)) {
+                value = Number.parseInt(value)
+              }
+              return value
+            })
+          }
+
+          datasets.push({ data, name })
+        }
+        diagrams.push({
+          datasets,
+          labels: component.labels,
+          type: component.type,
+          title: component.title,
+          width: component.width,
+        })
+
+        break
+      case DiagramType.Time:
+
+        for (const { name, filter } of component.datasets) {
+          let data = (await jq(filter, issues, {
+            input: 'json',
+            output: 'json',
+          })) as any[]
+
+          if (!Array.isArray(data)) {
+            data = [data]
+          }
+
+          if (component.accumulative) {
+            data = accumulateCustom(data)
+          }
+
+          datasets.push({ data, name })
+        }
+        diagrams.push({
+          datasets,
+          width: component.width,
+          xAxis: component.xAxis,
+          yAxis: component.yAxis,
+          type: component.type,
+          title: component.title,
+        })
+
+        break
+      case DiagramType.List:
+
+        let data = (await jq(component.filter, issues, {
           input: 'json',
           output: 'json',
-        })) as object
-        if (component.accumulative) {
-          value = accumulateCustom(value as any)
+        })) as any[]
+
+        if (!Array.isArray(data)) {
+          data = [data]
         }
-        datasets.push({ value, name })
-      }
-      diagrams.push({
-        datasets,
-        type: component.type,
-        title: component.title,
-        width: component.width,
-      })
-    } else if (component.type === 'bar') {
-      let datasets = []
-      for (const { name, filter } of component.datasets) {
-        const value = (await jq(filter, issues, {
-          input: 'json',
-          output: 'string',
-        })) as string
-        datasets.push({ value: value /*Number.parseInt(value)*/, name })
-      }
-      diagrams.push({
-        datasets,
-        type: component.type,
-        title: component.title,
-        width: component.width,
-      })
-    } else if (component.type === 'time') {
-      let datasets = []
-      for (const { name, filter } of component.datasets) {
-        let value = (await jq(filter, issues, {
-          input: 'json',
-          output: 'json',
-        })) as object
-        if (component.accumulative) {
-          value = accumulateCustom(value as any)
-        }
-        datasets.push({ value, name })
-      }
-      diagrams.push({
-        datasets,
-        width: component.width,
-        xAxis: component.xAxis,
-        yAxis: component.yAxis,
-        type: component.type,
-        title: component.title,
-      })
-    } else if (component.type === 'list') {
-      const values = (await jq(component.filter, issues, {
-        input: 'json',
-        output: 'json',
-      })) as any[]
-      diagrams.push({
-        values: values.map(value =>({...value, link: 'https://' + process.env.JIRA_HOST + '/browse/' + value.key})),
-        width: component.width,
-        type: component.type,
-        title: component.title,
-      })
+
+        data = data.map(value => {
+          let link = process.env.JIRA_HOST + '/browse/' + value.key
+          if (!link.startsWith('http')) {
+            link = 'https://' + link
+          }
+          return ({ ...value, link })
+        })
+
+        diagrams.push({
+          values: data,
+          width: component.width,
+          type: component.type,
+          title: component.title,
+        })
+
+        break
     }
   }
 
@@ -174,7 +420,7 @@ export const loader = async ({
 
 export default function Dashboard() {
   const params = useParams()
-  const { /*dashboard*/ diagrams } = useLoaderData<typeof loader>()
+  const { diagrams } = useLoaderData<typeof loader>()
   const navigation = useNavigation()
 
   if (navigation.state !== 'idle') {
@@ -196,22 +442,21 @@ export default function Dashboard() {
       {/*{JSON.stringify(dashboard || {})}*/}
       <Box flexGrow={1}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Dashboard
-          {/*{JSON.stringify(params)}*/}
+          {params['id'] || 'Dashboard'}
         </Typography>
 
         <Divider />
 
-        <Grid container spacing={2} mt={2} xs={12}>
-          {diagrams.map(diagram => {
+        <Grid container spacing={2} mt={2}>
+          {diagrams.map((diagram: Diagram, index: number) => {
             let component
-            if (diagram.type === 'number') {
+            if (diagram.type === DiagramType.Number) {
               component = (
                 <Typography variant="h1" textAlign="center" mt={4} mb={8}>
                   {diagram.value}
                 </Typography>
               )
-            } else if (diagram.type === 'doughnut') {
+            } else if (diagram.type === DiagramType.Doughnut) {
               component = (
                 <Doughnut
                   data={{
@@ -223,157 +468,61 @@ export default function Dashboard() {
                       },
                     ],
                   }}
-                  options={{
-                    parsing: {
-                      key: 'value',
-                    },
-                    plugins: {
-                      datalabels: {
-                        formatter: (value, ctx) => {
-                          const datapoints = ctx.chart.data.datasets[0].data
-                          const total = datapoints.reduce(
-                            (total: any, datapoint: any) =>
-                              total + Number.parseInt(datapoint),
-                            0,
-                          )
-                          const percentage = (value / total) * 100
-                          return percentage.toFixed(2) + '%'
-                        },
-                        labels: {
-                          value: {},
-                        },
-                      },
-                    },
-                  }}
+                  options={doughnutOptions}
                 />
               )
-            } else if (diagram.type === 'bar') {
+            } else if (diagram.type === DiagramType.Bar) {
               component = (
                 <Bar
                   data={{
-                    labels: ['data'],
+                    labels: diagram.labels,
                     datasets: diagram.datasets.map(ds => ({
-                      data: ds.value,
+                      data: ds.data,
                       label: ds.name,
                     })),
                   }}
                   options={{}}
                 />
               )
-            } else if (diagram.type === 'line') {
+            } else if (diagram.type === DiagramType.Line) {
               component = (
                 <Line
                   data={{
                     datasets: diagram.datasets.map(ds => ({
-                      data: ds.value,
+                      data: ds.data,
                       label: ds.name,
                     })),
                   }}
-                  options={{
-                    parsing: {
-                      xAxisKey: 'key',
-                      yAxisKey: 'value',
-                    },
-                    scales: {
-                      x: {
-                        ticks: {
-                          font: {
-                            size: 14,
-                          },
-                        },
-                        grid: {
-                          color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                      },
-                      y: {
-                        ticks: {
-                          font: {
-                            size: 14,
-                          },
-                        },
-                        grid: {
-                          color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                      },
-                    },
-                    plugins: {
-                      datalabels: {
-                        labels: {
-                          value: null,
-                        },
-                      },
-                    },
-                  }}
+                  options={lineOptions}
                 />
               )
-            } else if (diagram.type === 'time') {
+            } else if (diagram.type === DiagramType.Time) {
               component = (
                 <Line
                   data={{
                     datasets: diagram.datasets.map(ds => ({
-                      data: ds.value,
+                      data: ds.data,
                       label: ds.name,
+                      // trendlineLinear: {
+                      //   lineStyle: "dotted",
+                      //   width: 2,
+                      // },
                     })),
                   }}
-                  options={{
-                    parsing: {
-                      xAxisKey: 'created',
-                      yAxisKey: 'value',
-                    },
-                    scales: {
-                      x: {
-                        type: 'time',
-                        time: {
-                          unit: 'week',
-                        },
-                        ticks: {
-                          font: {
-                            size: 14,
-                          },
-                        },
-                        grid: {
-                          color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                        ...diagram.xAxis,
-                      },
-                      y: {
-                        ticks: {
-                          font: {
-                            size: 14,
-                          },
-                        },
-                        grid: {
-                          color: 'rgba(255, 255, 255, 0.1)',
-                          tickColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                        ...diagram.yAxis,
-                      },
-                    },
-                    plugins: {
-                      datalabels: {
-                        labels: {
-                          value: null,
-                        },
-                      },
-                    },
-                  }}
+                  options={timeOptions(diagram.xAxis, diagram.yAxis)}
                 />
               )
-            } else if (diagram.type === 'list') {
-              console.log(diagram.values)
+            } else if (diagram.type === DiagramType.List) {
               component = (
                 <List dense={false}>
                   {diagram.values.map((value) =>
                     <ListItem
                       secondaryAction={
-                        <IconButton component={'a'} target='blank' href={value.link} edge="end">
+                        <IconButton component={'a'} target="blank" href={value.link} edge="end">
                           <OpenInNewIcon />
                         </IconButton>
                       }>
-                      <ListItemText primary={value.fields.summary}/>
+                      <ListItemText primary={value.fields.summary} />
                     </ListItem>,
                   )}
                 </List>
@@ -382,15 +531,8 @@ export default function Dashboard() {
               component = JSON.stringify(diagram)
             }
             return (
-              <Grid item xs={diagram?.width || 6}>
-                <Card
-                  key={diagram.title}
-                  sx={
-                    {
-                      /*height: '100%'*/
-                    }
-                  }
-                >
+              <Grid key={index} item xs={diagram?.width || 6}>
+                <Card>
                   <CardHeader title={diagram.title} />
                   <CardContent sx={{ minHeight: '200px', maxHeight: '600px' }}>
                     {component}
